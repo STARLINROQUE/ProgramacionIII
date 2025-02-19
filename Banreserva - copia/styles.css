@@ -1,0 +1,84 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #c1b8b8;
+    color: #333;
+}
+
+/* Encabezado */
+header {
+    background-color: #4e8586;
+    color: rgb(120, 182, 119);
+    padding: 20px;
+    text-align: center;
+}
+
+/* Menú de navegación */
+.menu {
+    list-style: none;
+    padding: 0;
+    background-color: #3b8b99;
+    text-align: center;
+    margin: 0;
+}
+
+.menu li {
+    display: inline-block;
+    position: relative;
+}
+
+.menu li a {
+    display: block;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.menu li a:hover {
+    background-color: #e0eca1;
+}
+
+/* Estilo para el submenú desplegable */
+.submenu .dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #abaf5c;
+    list-style: none;
+    padding: 0;
+    min-width: 200px;
+}
+
+.submenu .dropdown li {
+    display: block;
+}
+
+.submenu .dropdown li a {
+    display: block;
+    padding: 12px 20px;
+    color: white;
+    text-align: left;
+}
+
+.submenu .dropdown li a:hover {
+    background-color: #b5c7d8;
+}
+
+/* Mostrar el menú cuando el mouse pasa sobre el padre */
+.submenu:hover .dropdown {
+    display: block;
+}
+
+/* Pie de página */
+footer {
+    background-color: #b1c5da;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 20px;
+}
+
