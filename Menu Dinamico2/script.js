@@ -1,83 +1,137 @@
-document.addEventListener("DOMContentLoaded", loadMenu);
+let menuData = [];
 
-let menuData = [
-    {
-        "id": 1,
-        "nombre": "NETFLIX",
-        "enlace": "https://www.netflix.com/do-en/"
-      },
-      {
-        "id": 2,
-        "nombre": "HBO MAX",
-        "enlace": "https://www.max.com/do/es"
-      },
-      {
-        "id": 3,
-        "nombre": "Prime Video",
-        "enlace": "https://www.primevideo.com/offers/nonprimehomepage/ref=dvm_pds_amz_do_dc_s_b_mkw_2sOY4U4l-dc?msclkid=c0a572426f3d15b46db8158a2660a357&mrntrk=pcrid_83975202921894_slid__pgrid_1343603226275980_pgeo_142181_x__adext__ptid_kwd-83975205462503:loc-55"
-      },
-      {
-        "id": 4,
-        "nombre": "Pluto TV",
-        "enlace": "https://pluto.tv/latam/live-tv/63eb9255c111bc0008fe6ec4?msockid=1096ab1200e662483f0cb8c60176637d"
-      },
-      {
-        "id": 5,
-        "nombre": "Disney+",
-        "enlace": "https://www.disneyplus.com/en-do?gclid=95e533670533110d266754af4fb52cd6&gclsrc=3p.ds&cid=DSS-Search-Bing-71700000112307058&s_kwcid=AL!8468!10!79714802571517!disney%20plus&msclkid=95e533670533110d266754af4fb52cd6"
-        , submenu:[{nombre:"star plus", enlace:"https://www.disneyplus.com/en-do/series/Star/106A3s2Armta?msockid=1096ab1200e662483f0cb8c60176637d"},]
-        },
-      
-      {
-        "id": 6,
-        "nombre": "HULU",
-        "enlace": "https://www.hulu.com/hub/movies"
-      }
-];
-
-function loadMenu() {
-    renderMenu();
-}
+document.addEventListener("DOMContentLoaded", () => {
+    const stored = localStorage.getItem("menu");
+    if (stored) {
+        menuData = JSON.parse(stored);
+        renderMenu();
+    } else {
+        fetch("menu.json")
+            .then(response => response.json())
+            .then(data => {
+                menuData = data.menu;
+                renderMenu();
+            })
+            .catch(error => console.error("Error al cargar el JSON:", error));
+    }
+});
 
 function renderMenu() {
     const menuList = document.getElementById("menu-list");
     menuList.innerHTML = "";
 
     menuData.forEach(item => {
-        let li = document.createElement("li");
+        const li = document.createElement("li");
 
-        let link = document.createElement("a");
+        const link = document.createElement("a");
         link.href = item.enlace;
         link.innerText = item.nombre;
+        link.target = "_blank";
 
-        // Agregar submenú si existe
-        if (item.submenu) {
-            let submenu = document.createElement("div");
+        li.appendChild(link);
+
+        if (item.submenu && item.submenu.length > 0) {
+            const submenu = document.createElement("div");
             submenu.classList.add("submenu");
 
             item.submenu.forEach(sub => {
-                let subLink = document.createElement("a");
+                const subLink = document.createElement("a");
                 subLink.href = sub.enlace;
                 subLink.innerText = sub.nombre;
+                subLink.target = "_blank";
                 submenu.appendChild(subLink);
             });
 
             li.appendChild(submenu);
         }
 
-        li.appendChild(link);
         menuList.appendChild(li);
-
-        // 🔥 Efecto cuando pasa el mouse
-        link.addEventListener("mouseover", () => {
-            link.style.backgroundColor = "#ff6600";
-            link.style.color = "black";
-        });
-
-        link.addEventListener("mouseout", () => {
-            link.style.backgroundColor = "";
-            link.style.color = "white";
-        });
     });
+
+    localStorage.setItem("menu", JSON.stringify(menuData));
 }
 
+function parseSubmenuInput() {
+    const raw = document.getElementById("submenu-items").value.trim();
+    if (!raw) return [];
+
+    return raw.split("\n").map(line => {
+        const [nombre, enlace] = line.split("|").map(s => s.trim());
+        return { nombre, enlace };
+    }).filter(item => item.nombre && item.enlace);
+}
+
+function addMenuItem() {
+    const nombre = document.getElementById("menu-name").value.trim();
+    const enlace = document.getElementById("menu-link").value.trim();
+    const submenu = parseSubmenuInput();
+
+    if (nombre && enlace) {
+        const newItem = {
+            id: Date.now(),
+            nombre,
+            enlace,
+            submenu
+        };
+
+        menuData.push(newItem);
+        renderMenu();
+        clearInputs();
+    } else {
+        alert("Por favor, completa nombre y enlace.");
+    }
+}
+
+function updateMenuItem() {
+    const id = parseInt(document.getElementById("menu-id").value);
+    const nombre = document.getElementById("menu-name").value.trim();
+    const enlace = document.getElementById("menu-link").value.trim();
+    const submenu = parseSubmenuInput();
+
+    const index = menuData.findIndex(item => item.id === id);
+    if (index !== -1) {
+        if (nombre) menuData[index].nombre = nombre;
+        if (enlace) menuData[index].enlace = enlace;
+        menuData[index].submenu = submenu;
+        renderMenu();
+        clearInputs();
+    } else {
+        alert("ID no encontrado.");
+    }
+}
+
+function deleteMenuItem() {
+    const id = parseInt(document.getElementById("menu-id").value);
+    const index = menuData.findIndex(item => item.id === id);
+    if (index !== -1) {
+        if (confirm("¿Seguro que deseas eliminar este ítem?")) {
+            menuData.splice(index, 1);
+            renderMenu();
+            clearInputs();
+        }
+    } else {
+        alert("ID no encontrado.");
+    }
+}
+
+function downloadMenuJSON() {
+    const dataStr = JSON.stringify({ menu: menuData }, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "menu_actualizado.json";
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function clearInputs() {
+    document.getElementById("menu-id").value = "";
+    document.getElementById("menu-name").value = "";
+    document.getElementById("menu-link").value = "";
+    document.getElementById("submenu-items").value = "";
+}
