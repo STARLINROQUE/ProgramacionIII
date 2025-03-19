@@ -13,12 +13,25 @@
     </nav>
 
     <section class="admin-panel">
-        <h2>Administrar Menú</h2>
+        <h2>Modificando mi Menú</h2>
+        <input type="number" id="menu-id" placeholder="ID (para modificar/eliminar)">
         <input type="text" id="menu-name" placeholder="Nombre del Menú">
         <input type="text" id="menu-link" placeholder="Enlace">
-        <button onclick="addMenuItem()">Agregar</button>
+        <textarea id="submenu-items" placeholder="Submenús (formato: Nombre|Enlace por línea)"></textarea>
+        
+        <div class="buttons">
+            <button onclick="addMenuItem()">Agregar</button>
+            <button onclick="updateMenuItem()">Modificar</button>
+            <button onclick="deleteMenuItem()">Eliminar</button>
+            <button onclick="downloadMenuJSON()">Descargar JSON</button>
+        </div>
     </section>
 
     <script src="script.js"></script>
 </body>
 </html>
+
+
+
+
+
