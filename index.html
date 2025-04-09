@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Multipágina</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- Barra de progreso -->
+        <div id="progress">
+            <div id="progress-bar"></div>
+        </div>
+
+        <form id="multiStepForm">
+            <!-- Encabezado con nombre -->
+            <div id="encabezado">
+                <h2 id="nombreEncabezado">Formulario de Datos</h2>
+            </div>
+
+            <!-- Página 1: Datos Personales -->
+            <div class="form-page active" id="page1">
+                <h2>Datos Personales</h2>
+                <div class="form-group">
+                    <label>Nombre:</label>
+                    <input type="text" id="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label>Edad:</label>
+                    <input type="number" id="edad" required>
+                </div>
+                <button type="button" onclick="nextPage(1)">Siguiente</button>
+            </div>
+
+            <!-- Página 2: Familiares -->
+            <div class="form-page" id="page2">
+                <h2>Familiares</h2>
+                <div class="form-group">
+                    <label>Nombre:</label>
+                    <input type="text" id="famNombre">
+                </div>
+                <div class="form-group">
+                    <label>Parentesco:</label>
+                    <input type="text" id="famParentesco">
+                </div>
+                <div class="form-group">
+                    <label>Edad:</label>
+                    <input type="number" id="famEdad">
+                </div>
+                <button type="button" onclick="addFamiliar()">Añadir Familiar</button>
+                <ul id="listaFamiliares"></ul>
+                <button type="button" onclick="prevPage(2)">Anterior</button>
+                <button type="button" onclick="nextPage(2)">Siguiente</button>
+            </div>
+
+            <!-- Página 3: Condiciones de Salud -->
+            <div class="form-page" id="page3">
+                <h2>Condiciones Preexistentes</h2>
+                <div class="form-group">
+                    <label>Enfermedad:</label>
+                    <input type="text" id="enfermedad">
+                </div>
+                <div class="form-group">
+                    <label>Tiempo con la Enfermedad (años):</label>
+                    <input type="number" id="tiempoEnfermedad">
+                </div>
+                <button type="button" onclick="prevPage(3)">Anterior</button>
+                <button type="button" onclick="nextPage(3)">Siguiente</button>
+            </div>
+
+            <!-- Página 4: Internamientos -->
+            <div class="form-page" id="page4">
+                <h2>Internamientos</h2>
+                <div class="form-group">
+                    <label>Fecha:</label>
+                    <input type="date" id="fechaInternamiento">
+                </div>
+                <div class="form-group">
+                    <label>Centro Médico:</label>
+                    <input type="text" id="centroMedico">
+                </div>
+                <div class="form-group">
+                    <label>Diagnóstico:</label>
+                    <input type="text" id="diagnostico">
+                </div>
+                <button type="button" onclick="prevPage(4)">Anterior</button>
+                <button type="button" onclick="nextPage(4)">Siguiente</button>
+            </div>
+
+            <!-- Página 5: Resumen -->
+            <div class="form-page" id="page5">
+                <h2>Resumen de Datos Registrados</h2>
+                
+                <h3>Datos Personales</h3>
+                <p><strong>Nombre:</strong> <span id="resNombre"></span></p>
+                <p><strong>Edad:</strong> <span id="resEdad"></span></p>
+
+                <h3>Familiares</h3>
+                <table id="tablaFamiliares">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Parentesco</th>
+                            <th>Edad</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <h3>Condiciones Preexistentes</h3>
+                <p><strong>Enfermedad:</strong> <span id="resEnfermedad"></span></p>
+                <p><strong>Tiempo con la Enfermedad:</strong> <span id="resTiempoEnfermedad"></span> años</p>
+
+                <h3>Internamientos Realizados</h3>
+                <table id="tablaInternamientos">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Centro Médico</th>
+                            <th>Diagnóstico</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <button type="button" onclick="prevPage(5)">Anterior</button>
+                <button type="button" onclick="guardarDatos()">Guardar</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
